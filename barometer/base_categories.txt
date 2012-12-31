@@ -1,0 +1,30 @@
+vodka,flavored
+tequila,silver
+tequila,reposado
+tequila,anejo
+gin,
+rum,light
+rum,dark
+rum,spiced
+rum,flavored
+whiskey,scotch
+whiskey,bourbon
+whiskey,rye
+whiskey,irish
+vermouth,sweet
+vermouth,dry
+cognac,
+brandy,
+liqueur,orange
+flavor,bitters
+flavor,syrup
+flavor,juice
+flavor,soda
+flavor,mix
+cooking,red wine
+cooking,white wine
+cooking,sherry
+cooking,marsala
+cooking,madeira
+cooking,sake
+cooking,beer

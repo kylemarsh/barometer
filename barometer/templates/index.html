@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+	<ul class=bottles>
+	{% for bottle in bottles %}
+		<li>{{ bottle }}</li>
+	{% else %}
+		<li>I find your lack of bar disturbing</li>
+	{% endfor %}
+	</ul>
+{% endblock %}
