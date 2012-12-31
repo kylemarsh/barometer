@@ -4,7 +4,14 @@
 	{% for bottle in bottles %}
 		<li>{{ bottle }}</li>
 	{% else %}
-		<li>I find your lack of bar disturbing</li>
+		{% if category == 'rum' %}
+		<li>But why is all the rum gone!?</li>
+		{% else %}
+		<li>Looks like you already drank all the {{ category }}. </li>
+		{% endif %}
+		<div class="errorimg">
+			<img src="{{ url_for('static', filename='images/spilledbooze.gif') }}">
+		</div>
 	{% endfor %}
 	</ul>
 {% endblock %}
