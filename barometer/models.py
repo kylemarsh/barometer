@@ -48,7 +48,7 @@ class Bottle(db.Model):
         else:
             kind = self.category
 
-        return "%s of %s (%s)" % (quantity, kind, self.description)
+        return "%s of %s %s" % (quantity, self.description, kind)
 
 
 class Category(db.Model):

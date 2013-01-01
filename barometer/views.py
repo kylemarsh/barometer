@@ -13,7 +13,12 @@ def index(category=None):
             results = Bottle.query.filter_by(subcategory=category).all()
     else:
         results = Bottle.query.all()
-    return render_template('index.html', bottles=results, category=category)
+
+    categories = {bottle.category: [] for bottle in results}
+    for bottle in results:
+        categories[bottle.category].append(bottle)
+
+    return render_template('index.html', categories=categories)
 
 
 @app.route("/add", methods=['POST', 'GET'])

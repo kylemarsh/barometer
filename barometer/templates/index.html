@@ -1,14 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
-	<ul class=bottles>
-	{% for bottle in bottles %}
-		<li>{{ bottle }}</li>
+	<ul class=categories>
+	{% for category in categories %}
+		<li><h2>{{ category.title() }}</h2>
+		<ul class=bottles>
+			{% for bottle in categories[category] %}
+			<li>{{ bottle }}
+			{% endfor %}
+		</ul>
 	{% else %}
-		{% if category == 'rum' %}
-		<li>But why is all the rum gone!?</li>
-		{% else %}
-		<li>Looks like you already drank all the {{ category }}. </li>
-		{% endif %}
+		<li>Those hooligans drank you dry!
 		<div class="errorimg">
 			<img src="{{ url_for('static', filename='images/spilledbooze.gif') }}">
 		</div>
