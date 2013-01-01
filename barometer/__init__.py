@@ -1,17 +1,8 @@
-from __future__ import with_statement
-
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
-# configuration
-# FIXME: Move to config file
-SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/barometer.db'
-SQLALCHEMY_ECHO = True
-DEBUG = True
-
 app = Flask(__name__)
-app.config.from_object(__name__)
-app.secret_key = 'secret'
+app.config.from_pyfile('barometer.cfg')
 db = SQLAlchemy(app)
 
 
