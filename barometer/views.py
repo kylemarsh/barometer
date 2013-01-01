@@ -54,8 +54,21 @@ def add():
 
 
 @app.route("/delete")
-def delete():
-    return render_template('unimplemented.html', page='Delete')
+@app.route("/delete/<bottle_id>")
+def delete(bottle_id=None):
+    if bottle_id:
+        bottle = Bottle.query.get_or_404(bottle_id)
+        db.session.delete(bottle)
+        db.session.commit()
+        flash('%s was removed from your inventory' % bottle)
+
+    results = Bottle.query.all()
+
+    categories = {bottle.category: [] for bottle in results}
+    for bottle in results:
+        categories[bottle.category].append(bottle)
+
+    return render_template('delete_bottle.html', categories=categories)
 
 
 @app.errorhandler(404)

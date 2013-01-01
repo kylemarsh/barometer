@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+	<ul class=categories>
+	{% for category in categories %}
+		<li><h2>{{ category.title() }}</h2>
+		<ul class=bottles>
+			{% for bottle in categories[category] %}
+			<li><a href="{{ url_for('delete') }}/{{ bottle.id }}">[x]</a>
+			{{ bottle }}
+			{% endfor %}
+		</ul>
+	{% else %}
+		<li>Those hooligans drank you dry!
+		<div class="errorimg">
+			<img src="{{ url_for('static', filename='images/spilledbooze.gif') }}">
+		</div>
+	{% endfor %}
+	</ul>
+{% endblock %}
