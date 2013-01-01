@@ -11,6 +11,7 @@ DEBUG = True
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.secret_key = 'secret'
 db = SQLAlchemy(app)
 
 
@@ -24,8 +25,9 @@ def init_db():
             if not Category.query.filter_by(category=cat).first():
                 db.session.add(Category(category=cat))
                 db.session.commit()
-            Subs.append(
-                Subcategory(category=cat, subcategory=sub.strip()))
+            if sub.strip():
+                Subs.append(
+                    Subcategory(category=cat, subcategory=sub.strip()))
         db.session.add_all(Subs)
         db.session.commit()
 

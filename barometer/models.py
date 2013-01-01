@@ -17,10 +17,10 @@ class Bottle(db.Model):
 
     def __init__(
             self,
-            size,
             description,
             category,
             subcategory,
+            size,
             amount):
 
         self.description = description
@@ -31,10 +31,10 @@ class Bottle(db.Model):
 
     def __repr__(self):
         return "<Bottle(%s, %s, %s, %s, %s)>" % (
-            self.size,
             self.description,
             self.category,
             self.subcategory,
+            self.size,
             self.amount)
 
     def __str__(self):
@@ -56,6 +56,9 @@ class Category(db.Model):
 
     category = db.Column(db.String(15), primary_key=True)
 
+    def __str__(self):
+        return self.category
+
 
 class Subcategory(db.Model):
     __tablename__ = 'subcategories'
@@ -71,3 +74,6 @@ class Amount(db.Model):
     __tablename__ = 'amounts'
 
     amount = db.Column(db.String(15), primary_key=True)
+
+    def __str__(self):
+        return self.amount

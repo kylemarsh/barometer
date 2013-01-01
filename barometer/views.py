@@ -1,6 +1,6 @@
-from flask import render_template
+from flask import flash, render_template, request
 
-from barometer import app
+from barometer import app, db
 from barometer.models import Amount, Bottle, Category, Subcategory
 
 
@@ -16,9 +16,29 @@ def index(category=None):
     return render_template('index.html', bottles=results, category=category)
 
 
-@app.route("/add")
+@app.route("/add", methods=['POST', 'GET'])
 def add():
-    return render_template('unimplemented.html', page='Add')
+    if request.method == 'POST':
+        form = request.form
+        NewBottle = Bottle(
+            form['description'],
+            form['category'].lower(),
+            form['subcategory'].lower(),
+            form['size'],
+            form['amount'].lower())
+        db.session.add(NewBottle)
+        db.session.commit()
+        flash('%s was added to your inventory' % NewBottle)
+    lists = dict(
+        categories=Category.query.all(),
+        subcategories=Subcategory.query.all(),
+        amounts=Amount.query.all())
+    return render_template('add_bottle.html', **lists)
+
+
+@app.route("/delete")
+def delete():
+    return render_template('unimplemented.html', page='Delete')
 
 
 @app.errorhandler(404)

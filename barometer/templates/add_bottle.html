@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block body %}
+<script type="text/javascript"
+	src="{{ url_for('static', filename='js/add_bottle.js') }}">
+</script>
+<form method=post action="{{ url_for('add') }}">
+	<label for="description">Description</label>
+	<input type=text name="description">
+	<br>
+	<label for="description">Type of Liquor</label>
+	<select id="category" name="category">
+		{% for c in categories %}
+		<option value="{{ c }}">{{ c.category.title() }}</option>
+		{% endfor %}
+		<option value="--">--</option>
+		<option value="new">Other:</option>
+	</select>
+	<input type=text id="new_category" name="new_category">
+	<br>
+	<label for="description">Subtype</label>
+	<select id="subcategory" name="subcategory">
+		<option value=""></option>
+		{% for s in subcategories %}
+		<option
+			class="contextual {{ s.category }}"
+			value="{{ s.subcategory }}">
+				{{ s.subcategory.title() }}
+		</option>
+		{% endfor %}
+		<option value="--">--</option>
+		<option value="new">Other:</option>
+	<input type=text id="new_subcategory" name="new_subcategory">
+	<br>
+	<label for="description">Size</label>
+	<input type=text name="size" size="5">
+	<br>
+	<label for="description">How full is the bottle?</label>
+	<select name="amount">
+		{% for a in amounts %}
+		<option value="{{ a }}">{{ a.amount.title() }}</option>
+		{% endfor %}
+	</select>
+	<br>
+	<input type=submit value="Add Bottle">
+</form>
+{% endblock %}
