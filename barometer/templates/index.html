@@ -6,6 +6,9 @@
 		<ul class=bottles>
 			{% for bottle in categories[category] %}
 			<li>{{ bottle }}
+			{% if logged_in %}
+			<a href="{{ url_for('edit', bottle_id=bottle.id) }}">edit</a>
+			{% endif %}
 			{% endfor %}
 		</ul>
 	{% else %}

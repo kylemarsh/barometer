@@ -1,5 +1,6 @@
 from flask import flash, render_template, redirect, request, url_for
-from flask.ext.login import login_required, login_user, logout_user
+from flask.ext.login import login_required, login_user, logout_user, \
+    current_user
 
 from barometer import app, db
 from barometer.models import Amount, Bottle, Category, Subcategory, User
@@ -14,7 +15,9 @@ def index(search=None):
     if search:
         try:
             subcat, cat = search.split()
-            results = Bottle.query.filter_by(category=cat, subcategory=subcat).all()
+            results = Bottle.query.filter_by(
+                category=cat,
+                subcategory=subcat).all()
         except ValueError:
             results = None
         if not results:
@@ -28,7 +31,10 @@ def index(search=None):
     for bottle in results:
         categories[bottle.category].append(bottle)
 
-    return render_template('index.html', categories=categories, search=search)
+    return render_template('index.html',
+        categories=categories,
+        search=search,
+        logged_in=bool(current_user.get_id()))
 
 
 @app.route("/add", methods=['POST', 'GET'])
@@ -81,6 +87,21 @@ def delete(bottle_id=None):
         categories[bottle.category].append(bottle)
 
     return render_template('delete_bottle.html', categories=categories)
+
+
+@app.route("/edit/<bottle_id>", methods=['GET', 'POST'])
+@login_required
+def edit(bottle_id=None):
+    bottle = Bottle.query.get_or_404(bottle_id)
+    if request.method == 'POST':
+        bottle.amount = request.form.get('amount')
+        db.session.commit()
+        flash('Amount reduced to %s' % bottle.amount)
+        return redirect(url_for('index'))
+
+    amounts = Amount.query.all()
+    return render_template('edit_bottle.html',
+        bottle=bottle, amounts=amounts)
 
 
 @app.route("/login", methods=['GET', 'POST'])

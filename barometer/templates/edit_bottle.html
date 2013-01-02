@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>Edit {{ bottle }}</h2>
+<form method=post action="">
+	<input type="hidden" name="bottle_id" value="{{ bottle.id }}">
+	<label for="amount">How full is the bottle?</label>
+	<select name="amount">
+		{% for a in amounts %}
+		<option value="{{ a }}">{{ a.amount.title() }}</option>
+		{% endfor %}
+	</select>
+	<br>
+	<input type=submit value="Update Bottle">
+</form>
+{% endblock %}
