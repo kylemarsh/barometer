@@ -8,6 +8,9 @@ from barometer.models import Amount, Bottle, Category, Subcategory, User
 @app.route("/")
 @app.route("/<search>")
 def index(search=None):
+    if not User.query.all():
+        return redirect(url_for('register'))
+
     if search:
         try:
             subcat, cat = search.split()
@@ -82,6 +85,9 @@ def delete(bottle_id=None):
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if not User.query.all():
+        return redirect(url_for('register'))
+
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -100,6 +106,34 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if User.query.all():
+        # registration is just for the initial set up right now
+        flash("You've already got a user set up")
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        confirm = request.form.get('confirm')
+        email = request.form.get('email')
+        if password == confirm:
+            new_user = User(username=username, password=password, email=email)
+            db.session.add(new_user)
+            db.session.commit()
+
+            remember = request.form.get("remember", "no") == "1"
+            login_user(new_user, remember=remember)
+
+            flash("Let's get started, %s! " % new_user.username.title() +
+                "First, enter what you've got in your bar.")
+            return redirect(url_for("add"))
+        else:
+            flash("Passwords must match")
+    return render_template('register.html', form=request.form)
 
 
 @app.errorhandler(404)
