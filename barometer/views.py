@@ -1,7 +1,8 @@
-from flask import flash, render_template, request
+from flask import flash, render_template, redirect, request, url_for
+from flask.ext.login import login_required, login_user, logout_user
 
 from barometer import app, db
-from barometer.models import Amount, Bottle, Category, Subcategory
+from barometer.models import Amount, Bottle, Category, Subcategory, User
 
 
 @app.route("/")
@@ -22,6 +23,7 @@ def index(category=None):
 
 
 @app.route("/add", methods=['POST', 'GET'])
+@login_required
 def add():
     if request.method == 'POST':
         form = request.form
@@ -55,6 +57,7 @@ def add():
 
 @app.route("/delete")
 @app.route("/delete/<bottle_id>")
+@login_required
 def delete(bottle_id=None):
     if bottle_id:
         bottle = Bottle.query.get_or_404(bottle_id)
@@ -69,6 +72,28 @@ def delete(bottle_id=None):
         categories[bottle.category].append(bottle)
 
     return render_template('delete_bottle.html', categories=categories)
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = auth_user(username, password)
+        if user:
+            remember = request.form.get("remember", "no") == "1"
+            login_user(user, remember=remember)
+            flash("Welcome, %s" % user.username)
+            return redirect(request.args.get("next") or url_for("index"))
+        else:
+            flash("Bad username or password")
+    return render_template('login.html')
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 @app.errorhandler(404)
@@ -102,6 +127,11 @@ def add_subcategory(category, new_subcategory):
         subcategory=new_subcategory))
     db.session.commit()
     return new_subcategory
+
+
+def auth_user(username, password):
+    #FIXME: password currently stored in cleartext
+    return User.query.filter_by(username=username, password=password).first()
 
 
 class CategoryError(Exception):

@@ -1,3 +1,5 @@
+from flask.ext.login import UserMixin
+
 from barometer import db
 
 
@@ -77,3 +79,12 @@ class Amount(db.Model):
 
     def __str__(self):
         return self.amount
+
+
+class User(UserMixin, db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(63))
+    password = db.Column(db.String(255))
+    email = db.Column(db.String(255))
