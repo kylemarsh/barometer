@@ -1,0 +1,2 @@
+recursive-include barometer/templates/*	
+recursive-include barometer/static/*	
