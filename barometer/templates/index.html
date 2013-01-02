@@ -9,7 +9,16 @@
 			{% endfor %}
 		</ul>
 	{% else %}
+		{% if not search %}
 		<li>Those hooligans drank you dry!
+		{% elif search == 'rum' %}
+		<li><h2>{{ search.title() }}</h2>
+		<li>But why is the rum gone!?
+		{% else %}
+		<li><h2>{{ search.title() }}</h2>
+		<li>I came here to kick ass and drink {{ search }}.
+			And we're all out of {{ search }}
+		{% endif %}
 		<div class="errorimg">
 			<img src="{{ url_for('static', filename='images/spilledbooze.gif') }}">
 		</div>

@@ -6,12 +6,18 @@ from barometer.models import Amount, Bottle, Category, Subcategory, User
 
 
 @app.route("/")
-@app.route("/<category>")
-def index(category=None):
-    if category:
-        results = Bottle.query.filter_by(category=category).all()
+@app.route("/<search>")
+def index(search=None):
+    if search:
+        try:
+            subcat, cat = search.split()
+            results = Bottle.query.filter_by(category=cat, subcategory=subcat).all()
+        except ValueError:
+            results = None
         if not results:
-            results = Bottle.query.filter_by(subcategory=category).all()
+            results = Bottle.query.filter_by(category=search).all()
+        if not results:
+            results = Bottle.query.filter_by(subcategory=search).all()
     else:
         results = Bottle.query.all()
 
@@ -19,7 +25,7 @@ def index(category=None):
     for bottle in results:
         categories[bottle.category].append(bottle)
 
-    return render_template('index.html', categories=categories)
+    return render_template('index.html', categories=categories, search=search)
 
 
 @app.route("/add", methods=['POST', 'GET'])
